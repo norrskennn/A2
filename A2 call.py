@@ -1,4 +1,6 @@
+from ast import main
 from logging import FileHandler
+from random import choice
 from netmiko import ConnectHandler
 import difflib
 import logging
@@ -84,10 +86,10 @@ isakmp_policy = 10 #lower number mean higher priority
 crypto_map = 'VPN_MAP' #a crypto map defines ipsec polcies that specify which traffic should be encrypted 
 shared_key =  'Th3cra!c$f@rfr0mm!ghty' #this key must be configured identically on both ends for a VPN Connection 
 
-def ssh(router_info):
+def ssh(router_infoo):
     try:
         #Establish SSH connection
-        with ConnectHandler(**router_info) as ssh_connection:
+        with ConnectHandler(**router_infoo) as ssh_connection:
             #Enable mode
             ssh_connection.enable()
             print("SSH connection successful")
@@ -100,9 +102,9 @@ def ssh(router_info):
         print(f"Error!: {str(e)}")
 
 #Establish a Telnet connection
-def telnet(router_info):
+def telnet(router_infoo):
     try:
-        with ConnectHandler(**router_info)as telnet_connection:
+        with ConnectHandler(**router_infoo)as telnet_connection:
             
             #Send a syslog message to the file for telnet connection
             telnet_connection.send_command("Telnet connection established.")
@@ -113,7 +115,7 @@ def telnet(router_info):
         print(f"Error: {str(e)}")
             
 
-def hostname_change(router_info):
+def hostname_change(router_infoo):
     
     #New hostname from the user
     new_hostname = input("Enter new hostname: ")
@@ -136,10 +138,10 @@ def hostname_change(router_info):
         else:
             print("Invalid. Choose again") #lets user known their input was invalid and prompts them to choose again 
 
-def grab_router_config(router_info): #function 
+def grab_router_config(router_infoo): #function 
     try:
         #Establish SSH connection for config files
-        with ConnectHandler(**router_info) as ssh_connection: 
+        with ConnectHandler(**router_infoo) as ssh_connection: 
             #Enter enable mode / router_infoo is a input 
             ssh_connection.enable() #inside the function 
 
@@ -164,7 +166,7 @@ def config_hardening_compare(device_config, hardening_advice): #function
     #configuration and the hardening advice are printed out line by line.
 
 
-def syslog_config(router_info): # function that sets up logging to a file and establishes an SSH connection to a router to configure syslog.
+def syslog_config(router_infoo): # function that sets up logging to a file and establishes an SSH connection to a router to configure syslog.
     try:   #Input: It takes a single argument router_infoo, is a dictionary containing the connection details for the router  IP, username, password).
         #Logging to a file
         syslog_file_handler = FileHandler('syslog_events_monitoring.txt')
@@ -176,7 +178,7 @@ def syslog_config(router_info): # function that sets up logging to a file and es
         logger.setLevel(logging.INFO)
 
         #Establish SSH connection
-        with ConnectHandler(**router_info) as ssh_connection:
+        with ConnectHandler(**router_infoo) as ssh_connection:
             #Enter enable mode
             ssh_connection.enable() #The enable()) method is called to enter privileged mode on the router.
 
@@ -215,9 +217,9 @@ def acl_list(router_infoo, acl_file): #function
         #Show file configuration of who has access and thier privellage
         print(output)
 
-def ipsec_config(router_info, isakmp_policy, crypto_map, shared_key):
+def ipsec_config(router_infoo, isakmp_policy, crypto_map, shared_key):
     #connect to device
-    with ConnectHandler(**router_info) as ssh_connection:
+    with ConnectHandler(**router_infoo) as ssh_connection:
         #Enter enable mode
         ssh_connection.enable
   # Build ISAKMP configuration string with the provided policy and parameters
@@ -245,14 +247,14 @@ def ipsec_config(router_info, isakmp_policy, crypto_map, shared_key):
 #Main menu
 while True:
     print("\n Main Menu: ")
-    print("1. Change Hostname now")
-    print("2. EstablishSSH Connection ")
-    print("3. EstablishTelnet_Connection")
-    print("4. retrieve running configuration")
-    print("5. Compare running configuration with Cisco Hardening Advice")
-    print("6. Configure event logging will redirect")
-    print("7. Does Access Control from list")
-    print("8.IP security")
+    print("1. Change_Hostname_now")
+    print("2. Establish_SSH_Connection_ ")
+    print("3. Establish_Telnet_Connection_")
+    print("4. retrieve_running_configuration")
+    print("5. Compare_running_configuration_with_Cisco_Hardening_Advice")
+    print("6. Configure_event_logging_will_redirect")
+    print("7. Does_Access_Control_from_list")
+    print("8.IP_security")
     print("0. Exiting")
 
     main_choice = input("Enter your choice: ")
@@ -281,4 +283,3 @@ while True:
         print("Invalid choose")
 
     #s22153423
-    
